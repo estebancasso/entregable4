@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import UserList from "./components/UserList";
-import UseCard from "./components/UseCard";
-import { useForm } from "react-hook-form";
-import axios from "axios";
 import { IconPlus } from "@tabler/icons-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import UseCard from "./components/UseCard";
+import UserList from "./components/UserList";
+
 
 const BASE_URL = "https://users-crud.academlo.tech";
 
@@ -13,7 +14,12 @@ function App() {
   const [users, setUsers] = useState([]);
   const [userToEdit, setUserToEdit] = useState(null);
 
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   //? Abrir modal
   const hadleOpenModal = () => {
@@ -88,7 +94,7 @@ function App() {
           user.id === userToEdit.id ? updateUser : user
         );
         setUsers(newUser);
-        handleCloseModal()
+        handleCloseModal();
       })
       .catch((err) => console.log(err));
   };
@@ -109,7 +115,9 @@ function App() {
   return (
     <main className="py-8 px-5 sm:py-12 sm:px-20">
       <header className="flex justify-between">
-        <h5 className="font-bold text-2xl text-[#12123a] sm:text-4xl">Usuarios</h5>
+        <h5 className="font-bold text-2xl text-[#12123a] sm:text-4xl">
+          Usuarios
+        </h5>
         <button
           className="flex gap-1 bg-[#555A88] p-2 text-white text-sm rounded-md sm:text-base"
           onClick={hadleOpenModal}
@@ -126,6 +134,7 @@ function App() {
         createUser={createUser}
         editUser={editUser}
         isUdating={!!userToEdit}
+        errors={errors}
       />
       <UserList
         users={users}
